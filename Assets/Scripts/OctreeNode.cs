@@ -12,6 +12,7 @@ public class OctreeNode : MonoBehaviour
     OctreeNode[] subNodes;
 
     public List<Entity> enities;
+    private List<Entity> subnodesEntities = new List<Entity>();
 
     public void Subdivide(GameObject prefab, int desiredDepth, GameObject entityPrefab) {
         float val = (size / 4);
@@ -72,19 +73,11 @@ public class OctreeNode : MonoBehaviour
     }
 
     public bool IsRoot() {
-        if(parentNode) {
-            return false;
-        } else {
-            return true;
-        }
+        return !parentNode;
     }
 
     public bool IsLeaf() {
-        if(subNodes[0]) {
-            return false;
-        } else {
-            return true;
-        }
+        return !subNodes[0];
     }
 
     public NodePosition GetNodePosition() {
@@ -128,13 +121,13 @@ public class OctreeNode : MonoBehaviour
     }
 
     internal List<Entity> GetEntitiesInSubNodes() {
-        List<Entity> result = new List<Entity>();
+        subnodesEntities.Clear();
 
         if(!IsLeaf()) {
             foreach(OctreeNode n in subNodes) {
-                result.AddRange(n.GetEnitiesInNode());
+                subnodesEntities.AddRange(n.GetEnitiesInNode());
             }
-            return result;
+            return subnodesEntities;
         } else {
             return null;
         }
